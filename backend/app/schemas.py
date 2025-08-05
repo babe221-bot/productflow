@@ -112,6 +112,60 @@ class DashboardSummary(BaseModel):
     class Config:
         from_attributes = True
 
+# Production record schemas
+class ProductionRecordBase(BaseModel):
+    shift: str  # morning, afternoon, night
+    output_quantity: int
+    defect_quantity: int = 0
+    downtime_minutes: int = 0
+    efficiency_percentage: Optional[float] = None
+    date: datetime
+
+class ProductionRecordCreate(ProductionRecordBase):
+    equipment_id: int
+
+class ProductionRecord(ProductionRecordBase):
+    id: int
+    equipment_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Maintenance log schemas
+class MaintenanceLogBase(BaseModel):
+    maintenance_type: str  # preventive, corrective, emergency
+    description: str
+    cost: Optional[float] = None
+    duration_hours: Optional[float] = None
+    parts_replaced: Optional[str] = None
+    scheduled_date: Optional[datetime] = None
+
+class MaintenanceLogCreate(MaintenanceLogBase):
+    equipment_id: int
+    technician_id: int
+
+class MaintenanceLog(MaintenanceLogBase):
+    id: int
+    equipment_id: int
+    technician_id: int
+    status: str
+    completed_date: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Shift summary schemas
+class ShiftSummary(BaseModel):
+    shift: str
+    date: datetime
+    total_output: int
+    total_defects: int
+    total_downtime: int
+    average_efficiency: float
+    equipment_count: int
+
 # Equipment with sensor data
 class EquipmentWithSensors(Equipment):
     sensor_data: List[SensorData] = []

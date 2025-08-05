@@ -150,5 +150,105 @@ def read_dashboard_summary(
 ):
     return crud.get_dashboard_summary(db)
 
+# Production records endpoints
+@app.get("/production/records", response_model=List[schemas.ProductionRecord])
+def read_production_records(
+    skip: int = 0,
+    limit: int = 100,
+    equipment_id: Optional[int] = None,
+    shift: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    records = crud.get_production_records(db, skip=skip, limit=limit, equipment_id=equipment_id, shift=shift)
+    return records
+
+@app.get("/production/records/{record_id}", response_model=schemas.ProductionRecord)
+def read_production_record(
+    record_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    record = crud.get_production_record_by_id(db, record_id=record_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Production record not found")
+    return record
+
+@app.post("/production/records", response_model=schemas.ProductionRecord)
+def create_production_record(
+    record: schemas.ProductionRecordCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    return crud.create_production_record(db=db, record=record)
+
+@app.put("/production/records/{record_id}", response_model=schemas.ProductionRecord)
+def update_production_record(
+    record_id: int,
+    record_update: schemas.ProductionRecordCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    record = crud.update_production_record(db, record_id=record_id, record_update=record_update)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Production record not found")
+    return record
+
+# Shift management endpoints
+@app.get("/production/shifts/summary", response_model=List[schemas.ShiftSummary])
+def read_shift_summary(
+    date: datetime,
+    shift: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    summaries = crud.get_shift_summary(db, date=date, shift=shift)
+    return summaries
+
+# Maintenance logs endpoints
+@app.get("/maintenance/logs", response_model=List[schemas.MaintenanceLog])
+def read_maintenance_logs(
+    skip: int = 0,
+    limit: int = 100,
+    equipment_id: Optional[int] = None,
+    status: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    logs = crud.get_maintenance_logs(db, skip=skip, limit=limit, equipment_id=equipment_id, status=status)
+    return logs
+
+@app.get("/maintenance/logs/{log_id}", response_model=schemas.MaintenanceLog)
+def read_maintenance_log(
+    log_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    log = crud.get_maintenance_log_by_id(db, log_id=log_id)
+    if log is None:
+        raise HTTPException(status_code=404, detail="Maintenance log not found")
+    return log
+
+@app.post("/maintenance/logs", response_model=schemas.MaintenanceLog)
+def create_maintenance_log(
+    log: schemas.MaintenanceLogCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    return crud.create_maintenance_log(db=db, log=log)
+
+@app.patch("/maintenance/logs/{log_id}/status")
+def update_maintenance_log_status(
+    log_id: int,
+    status: str,
+    completed_date: Optional[datetime] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    log = crud.update_maintenance_log_status(db, log_id=log_id, status=status, completed_date=completed_date)
+    if log is None:
+        raise HTTPException(status_code=404, detail="Maintenance log not found")
+    return {"message": "Status updated successfully", "status": status}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

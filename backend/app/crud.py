@@ -52,18 +52,49 @@ def create_maintenance_alert(db: Session, alert: schemas.MaintenanceAlertCreate)
 
 # Production metrics
 def get_production_metrics(db: Session) -> schemas.ProductionMetrics:
-    # Calculate metrics from production records
+    # Calculate metrics from production records for the last 7 days
     today = datetime.now().date()
     week_ago = today - timedelta(days=7)
     
-    # Mock data for now - in real implementation, calculate from actual records
+    # Get production records from the last week
+    records = db.query(models.ProductionRecord).filter(
+        func.date(models.ProductionRecord.date) >= week_ago
+    ).all()
+    
+    if not records:
+        # Return default values if no records found
+        return schemas.ProductionMetrics(
+            total_output=0,
+            efficiency_percentage=0.0,
+            defect_rate=0.0,
+            downtime_hours=0.0,
+            active_equipment=0,
+            total_equipment=db.query(models.Equipment).count()
+        )
+    
+    # Calculate metrics from actual records
+    total_output = sum(r.output_quantity for r in records)
+    total_defects = sum(r.defect_quantity for r in records)
+    total_downtime_minutes = sum(r.downtime_minutes for r in records)
+    average_efficiency = sum(r.efficiency_percentage for r in records) / len(records)
+    
+    # Calculate defect rate as percentage
+    defect_rate = (total_defects / total_output * 100) if total_output > 0 else 0
+    
+    # Convert downtime to hours
+    downtime_hours = total_downtime_minutes / 60
+    
+    # Count unique equipment that has production records
+    active_equipment = len(set(r.equipment_id for r in records))
+    total_equipment = db.query(models.Equipment).count()
+    
     return schemas.ProductionMetrics(
-        total_output=12450,
-        efficiency_percentage=92.3,
-        defect_rate=2.1,
-        downtime_hours=4.5,
-        active_equipment=4,
-        total_equipment=5
+        total_output=total_output,
+        efficiency_percentage=round(average_efficiency, 2),
+        defect_rate=round(defect_rate, 2),
+        downtime_hours=round(downtime_hours, 2),
+        active_equipment=active_equipment,
+        total_equipment=total_equipment
     )
 
 # Dashboard summary
@@ -234,6 +265,93 @@ def init_sample_data(db: Session):
         db.add(alert)
     
     db.commit()
+    
+    # Create sample production records
+    production_records = [
+        models.ProductionRecord(
+            equipment_id=1,  # Injection Molding Machine
+            shift="morning",
+            output_quantity=450,
+            defect_quantity=8,
+            downtime_minutes=15,
+            efficiency_percentage=96.9,
+            date=datetime.now() - timedelta(days=1)
+        ),
+        models.ProductionRecord(
+            equipment_id=1,
+            shift="afternoon",
+            output_quantity=420,
+            defect_quantity=12,
+            downtime_minutes=30,
+            efficiency_percentage=93.8,
+            date=datetime.now() - timedelta(days=1)
+        ),
+        models.ProductionRecord(
+            equipment_id=2,  # CNC Milling Machine
+            shift="morning",
+            output_quantity=280,
+            defect_quantity=5,
+            downtime_minutes=45,
+            efficiency_percentage=90.6,
+            date=datetime.now() - timedelta(days=1)
+        ),
+        models.ProductionRecord(
+            equipment_id=3,  # Conveyor System
+            shift="morning",
+            output_quantity=950,
+            defect_quantity=15,
+            downtime_minutes=10,
+            efficiency_percentage=97.9,
+            date=datetime.now() - timedelta(days=1)
+        )
+    ]
+    
+    for record in production_records:
+        db.add(record)
+    
+    # Create sample maintenance logs
+    maintenance_logs = [
+        models.MaintenanceLog(
+            equipment_id=1,
+            maintenance_type="preventive",
+            description="Regular lubrication and filter replacement",
+            technician_id=3,  # Maintenance Technician
+            cost=250.00,
+            duration_hours=2.5,
+            parts_replaced="Oil filter, hydraulic fluid",
+            status="completed",
+            scheduled_date=datetime.now() - timedelta(days=7),
+            completed_date=datetime.now() - timedelta(days=7, hours=2)
+        ),
+        models.MaintenanceLog(
+            equipment_id=2,
+            maintenance_type="corrective",
+            description="Replace worn bearing in spindle assembly",
+            technician_id=3,
+            cost=850.00,
+            duration_hours=4.0,
+            parts_replaced="Spindle bearing assembly",
+            status="completed",
+            scheduled_date=datetime.now() - timedelta(days=3),
+            completed_date=datetime.now() - timedelta(days=3, hours=4)
+        ),
+        models.MaintenanceLog(
+            equipment_id=4,  # Robotic Arm
+            maintenance_type="emergency",
+            description="Hydraulic system repair - critical failure",
+            technician_id=3,
+            cost=1200.00,
+            duration_hours=6.0,
+            parts_replaced="Hydraulic pump, pressure valve",
+            status="in_progress",
+            scheduled_date=datetime.now()
+        )
+    ]
+    
+    for log in maintenance_logs:
+        db.add(log)
+    
+    db.commit()
 
 def generate_sensor_value(sensor_type: str) -> float:
     """Generate realistic sensor values"""
@@ -281,3 +399,114 @@ def get_sensor_status(sensor_type: str, value: float) -> str:
             return "critical"
     
     return "normal"
+
+# Production record CRUD operations
+def get_production_records(db: Session, skip: int = 0, limit: int = 100, equipment_id: Optional[int] = None, shift: Optional[str] = None):
+    query = db.query(models.ProductionRecord)
+    if equipment_id:
+        query = query.filter(models.ProductionRecord.equipment_id == equipment_id)
+    if shift:
+        query = query.filter(models.ProductionRecord.shift == shift)
+    return query.order_by(desc(models.ProductionRecord.date)).offset(skip).limit(limit).all()
+
+def get_production_record_by_id(db: Session, record_id: int):
+    return db.query(models.ProductionRecord).filter(models.ProductionRecord.id == record_id).first()
+
+def create_production_record(db: Session, record: schemas.ProductionRecordCreate):
+    # Calculate efficiency if not provided
+    if record.efficiency_percentage is None:
+        total_time = 8 * 60  # 8 hours in minutes
+        productive_time = total_time - record.downtime_minutes
+        record.efficiency_percentage = (productive_time / total_time) * 100 if total_time > 0 else 0
+    
+    db_record = models.ProductionRecord(**record.dict())
+    db.add(db_record)
+    db.commit()
+    db.refresh(db_record)
+    return db_record
+
+def update_production_record(db: Session, record_id: int, record_update: schemas.ProductionRecordCreate):
+    db_record = db.query(models.ProductionRecord).filter(models.ProductionRecord.id == record_id).first()
+    if db_record:
+        for key, value in record_update.dict(exclude_unset=True).items():
+            setattr(db_record, key, value)
+        db.commit()
+        db.refresh(db_record)
+    return db_record
+
+# Maintenance log CRUD operations
+def get_maintenance_logs(db: Session, skip: int = 0, limit: int = 100, equipment_id: Optional[int] = None, status: Optional[str] = None):
+    query = db.query(models.MaintenanceLog)
+    if equipment_id:
+        query = query.filter(models.MaintenanceLog.equipment_id == equipment_id)
+    if status:
+        query = query.filter(models.MaintenanceLog.status == status)
+    return query.order_by(desc(models.MaintenanceLog.created_at)).offset(skip).limit(limit).all()
+
+def get_maintenance_log_by_id(db: Session, log_id: int):
+    return db.query(models.MaintenanceLog).filter(models.MaintenanceLog.id == log_id).first()
+
+def create_maintenance_log(db: Session, log: schemas.MaintenanceLogCreate):
+    db_log = models.MaintenanceLog(**log.dict())
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+    return db_log
+
+def update_maintenance_log_status(db: Session, log_id: int, status: str, completed_date: Optional[datetime] = None):
+    db_log = db.query(models.MaintenanceLog).filter(models.MaintenanceLog.id == log_id).first()
+    if db_log:
+        db_log.status = status
+        if completed_date:
+            db_log.completed_date = completed_date
+        elif status == "completed":
+            db_log.completed_date = datetime.now()
+        db.commit()
+        db.refresh(db_log)
+    return db_log
+
+# Shift summary operations
+def get_shift_summary(db: Session, date: datetime, shift: Optional[str] = None):
+    query = db.query(models.ProductionRecord).filter(
+        func.date(models.ProductionRecord.date) == date.date()
+    )
+    if shift:
+        query = query.filter(models.ProductionRecord.shift == shift)
+    
+    records = query.all()
+    
+    if not records:
+        return []
+    
+    # Group by shift if no specific shift requested
+    if not shift:
+        shift_groups = {}
+        for record in records:
+            if record.shift not in shift_groups:
+                shift_groups[record.shift] = []
+            shift_groups[record.shift].append(record)
+        
+        summaries = []
+        for shift_name, shift_records in shift_groups.items():
+            summary = calculate_shift_summary(shift_name, date, shift_records)
+            summaries.append(summary)
+        return summaries
+    else:
+        return [calculate_shift_summary(shift, date, records)]
+
+def calculate_shift_summary(shift: str, date: datetime, records: List[models.ProductionRecord]) -> schemas.ShiftSummary:
+    total_output = sum(r.output_quantity for r in records)
+    total_defects = sum(r.defect_quantity for r in records)
+    total_downtime = sum(r.downtime_minutes for r in records)
+    average_efficiency = sum(r.efficiency_percentage for r in records) / len(records) if records else 0
+    equipment_count = len(set(r.equipment_id for r in records))
+    
+    return schemas.ShiftSummary(
+        shift=shift,
+        date=date,
+        total_output=total_output,
+        total_defects=total_defects,
+        total_downtime=total_downtime,
+        average_efficiency=round(average_efficiency, 2),
+        equipment_count=equipment_count
+    )
