@@ -43,20 +43,46 @@ ProducFlow is a comprehensive manufacturing process automation platform designed
 - **Material-UI** - Component library
 - **Axios** - HTTP client
 
-## Getting Started
+## Quick Start
+
+### Automated Setup (Recommended)
+The easiest way to get ProducFlow running:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/producflow.git
+   cd producflow
+   ```
+
+2. **Run the startup script:**
+   ```bash
+   # On Windows
+   python start_producflow.py
+   # or double-click start_producflow.bat
+   
+   # On macOS/Linux
+   python3 start_producflow.py
+   ```
+
+3. **Access the application:**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
 
 ### Prerequisites
 - Python 3.8 or higher
 - Node.js 16 or higher
-- npm or yarn
+- npm (comes with Node.js)
 
-### Backend Setup
+### Manual Setup
+
+#### Backend Setup
 1. Navigate to the backend directory:
    ```bash
    cd backend
    ```
 
-2. Create a virtual environment:
+2. Create a virtual environment (optional but recommended):
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -67,14 +93,17 @@ ProducFlow is a comprehensive manufacturing process automation platform designed
    pip install -r requirements.txt
    ```
 
-4. Run the development server:
+4. Initialize the database:
+   ```bash
+   python init_db.py
+   ```
+
+5. Run the development server:
    ```bash
    uvicorn main:app --reload
    ```
 
-The API will be available at `http://localhost:8000`
-
-### Frontend Setup
+#### Frontend Setup
 1. Navigate to the frontend directory:
    ```bash
    cd frontend
@@ -89,8 +118,6 @@ The API will be available at `http://localhost:8000`
    ```bash
    npm start
    ```
-
-The application will be available at `http://localhost:3000`
 
 ## API Documentation
 
