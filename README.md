@@ -219,12 +219,23 @@ productflow/
 }
 ```
 
-## Demo Credentials
+## 🎯 Demo Credentials
 
-For testing purposes, you can use these demo credentials:
-- **Admin**: admin@producflow.com / admin123
-- **Manager**: manager@producflow.com / manager123
-- **Technician**: tech@producflow.com / tech123
+| Role | Email | Password | Access Level |
+|------|-------|----------|--------------|
+| **Admin** | admin@producflow.com | admin123 | Full system access |
+| **Manager** | manager@producflow.com | manager123 | Production oversight |
+| **Technician** | tech@producflow.com | tech123 | Maintenance focus |
+
+## 📊 What's Included
+- **5 Sample Equipment** with real-time sensor data
+- **Predictive Maintenance Alerts** with priority levels
+- **Production Analytics** with efficiency tracking
+- **User Management** with role-based access
+- **Interactive Dashboards** with live charts
+- **Comprehensive API** with full documentation
+
+> 💡 **Quick Demo**: Run `python test_backend.py` to verify the backend is working, then see [DEMO.md](DEMO.md) for a complete feature walkthrough!
 
 ## Contributing
 
