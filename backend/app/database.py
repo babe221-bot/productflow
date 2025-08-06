@@ -1,21 +1,23 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Database URL - using SQLite for development, can be changed to PostgreSQL for production
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./producflow.db")
+# Database URL - using aiosqlite for async SQLite
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./producflow.db")
 
-if DATABASE_URL.startswith("sqlite"):
-    engine = create_engine(
-        DATABASE_URL, connect_args={"check_same_thread": False}
-    )
-else:
-    engine = create_engine(DATABASE_URL)
+# The create_async_engine() function is used to create an asynchronous engine.
+engine = create_async_engine(DATABASE_URL, echo=True)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# The async_sessionmaker() function is used to create an asynchronous session maker.
+SessionLocal = async_sessionmaker(
+    bind=engine,
+    autocommit=False,
+    autoflush=False,
+    expire_on_commit=False
+)
 
+# The declarative_base() is used to create the Base class for the models.
 Base = declarative_base()
