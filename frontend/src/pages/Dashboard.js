@@ -40,6 +40,7 @@ const Dashboard = () => {
     try {
       const response = await axios.get('/dashboard/summary');
       setSummary(response.data);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
       setError('Failed to load dashboard data');
@@ -158,9 +159,14 @@ const Dashboard = () => {
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Real-time overview of your manufacturing operations
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="subtitle1" color="text.secondary">
+          Real-time overview of your manufacturing operations
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          Last updated: {lastUpdated.toLocaleTimeString()}
+        </Typography>
+      </Box>
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {kpiCards.map((card, index) => (

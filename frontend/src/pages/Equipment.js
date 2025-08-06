@@ -23,17 +23,44 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import SearchBar from '../components/SearchBar';
 
 const Equipment = () => {
   const [equipment, setEquipment] = useState([]);
+  const [filteredEquipment, setFilteredEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchEquipment();
   }, [statusFilter]);
+
+  useEffect(() => {
+    filterEquipment();
+  }, [equipment, searchQuery, statusFilter]);
+
+  const filterEquipment = () => {
+    let filtered = equipment;
+
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter) {
+      filtered = filtered.filter(item => item.status === statusFilter);
+    }
+
+    setFilteredEquipment(filtered);
+  };
 
   const fetchEquipment = async () => {
     try {
@@ -106,20 +133,21 @@ const Equipment = () => {
         </IconButton>
       </Box>
 
-      <Box display="flex" gap={2} mb={3}>
-        <TextField
-          select
-          label="Filter by Status"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          sx={{ minWidth: 200 }}
-        >
-          <MenuItem value="">All Status</MenuItem>
-          <MenuItem value="operational">Operational</MenuItem>
-          <MenuItem value="warning">Warning</MenuItem>
-          <MenuItem value="critical">Critical</MenuItem>
-          <MenuItem value="maintenance">Maintenance</MenuItem>
-        </TextField>
+      <Box display="flex" gap={2} mb={3} flexWrap="wrap">
+        <SearchBar
+          placeholder="Search equipment by name, type, or location..."
+          onSearch={setSearchQuery}
+          value={searchQuery}
+          suggestions={equipment.map(item => item.name)}
+          filters={[
+            { label: 'Operational', value: 'operational' },
+            { label: 'Warning', value: 'warning' },
+            { label: 'Critical', value: 'critical' },
+            { label: 'Maintenance', value: 'maintenance' },
+          ]}
+          onFilterChange={(filters) => setStatusFilter(filters[0] || '')}
+          fullWidth
+        />
       </Box>
 
       {error && (
