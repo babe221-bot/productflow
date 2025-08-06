@@ -29,6 +29,7 @@ def create_proposal(request):
 def proposal_list(request):
     proposals = Proposal.objects.filter(status='active').order_by('-deadline')
     return render(request, 'governance/proposal_list.html', {'proposals': proposals})
+ feat/backend-improvements
 
 from tasks.voting import submit_vote
 
@@ -52,3 +53,5 @@ def cast_vote(request, proposal_id, vote_direction):
 def get_proposal_card(request, proposal_id):
     proposal = Proposal.objects.get(id=proposal_id)
     return render(request, 'components/_proposal_card.html', {'proposal': proposal})
+
+ main
