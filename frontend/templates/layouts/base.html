@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" class="{% block theme_class %}light-mode{% endblock %}">
+<head>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    {% include 'components/header.html' %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'components/footer.html' %}
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+</body>
+</html>
