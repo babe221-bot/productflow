@@ -29,6 +29,9 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import NotificationCenter from './NotificationCenter';
+import StatusIndicator from './StatusIndicator';
+import QuickActions from './QuickActions';
 
 const drawerWidth = 240;
 
@@ -112,9 +115,11 @@ const Layout = ({ children }) => {
             Manufacturing Management System
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ mr: 2 }}>
+            <StatusIndicator />
+            <Typography variant="body2" sx={{ mx: 2 }}>
               {user?.full_name}
             </Typography>
+            <NotificationCenter />
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -189,6 +194,7 @@ const Layout = ({ children }) => {
         <Toolbar />
         {children}
       </Box>
+      <QuickActions />
     </Box>
   );
 };

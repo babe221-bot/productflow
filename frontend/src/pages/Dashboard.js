@@ -23,9 +23,17 @@ const Dashboard = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [lastUpdated, setLastUpdated] = useState(new Date());
 
   useEffect(() => {
     fetchDashboardData();
+    
+    // Set up real-time data updates
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 30000); // Update every 30 seconds
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboardData = async () => {

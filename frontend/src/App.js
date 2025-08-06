@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { useAuth } from './contexts/AuthContext';
 import Login from './components/Login';
 import Layout from './components/Layout';
+import LoadingSpinner from './components/LoadingSpinner';
 import Dashboard from './pages/Dashboard';
 import Equipment from './pages/Equipment';
 import EquipmentDetail from './pages/EquipmentDetail';
@@ -15,16 +16,7 @@ function App() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        Loading...
-      </Box>
-    );
+    return <LoadingSpinner message="Initializing ProducFlow..." fullScreen />;
   }
 
   if (!user) {
