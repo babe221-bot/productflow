@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+ feat/backend-improvements
     const themeSwitcher = document.getElementById('theme-switcher');
     const themeIconLight = document.getElementById('theme-icon-light');
     const themeIconDark = document.getElementById('theme-icon-dark');
@@ -21,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
+ main
     const connectWalletBtn = document.getElementById('connect-wallet-btn');
     const disconnectWalletBtn = document.getElementById('disconnect-wallet-btn');
     const walletInfo = document.getElementById('wallet-info');

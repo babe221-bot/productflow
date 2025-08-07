@@ -2,7 +2,10 @@
 <html lang="en" class="{% block theme_class %}light-mode{% endblock %}">
 <head>
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+ feat/backend-improvements
     <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+
+ main
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% include 'components/header.html' %}
@@ -15,6 +18,13 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="{% static 'js/htmx.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+ feat/backend-improvements
     {% block extra_js %}{% endblock %}
+
+ feat/backend-improvements
+    {% block extra_js %}{% endblock %}
+
+ main
+ main
 </body>
 </html>
