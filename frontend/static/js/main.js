@@ -1,4 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
+ feat/backend-improvements
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const themeIconLight = document.getElementById('theme-icon-light');
+    const themeIconDark = document.getElementById('theme-icon-dark');
+
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        themeIconLight.classList.add('hidden');
+        themeIconDark.classList.remove('hidden');
+    }
+
+    themeSwitcher.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark-mode');
+        themeIconLight.classList.toggle('hidden');
+        themeIconDark.classList.toggle('hidden');
+
+        if (document.documentElement.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+
+ main
     const connectWalletBtn = document.getElementById('connect-wallet-btn');
     const disconnectWalletBtn = document.getElementById('disconnect-wallet-btn');
     const walletInfo = document.getElementById('wallet-info');

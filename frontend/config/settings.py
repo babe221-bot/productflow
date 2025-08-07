@@ -16,9 +16,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-12345')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+ feat/backend-improvements
+DEBUG = False
+
+ALLOWED_HOSTS = ['*']
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
+ main
 
 
 # Application definition
@@ -46,6 +52,10 @@ CHANNEL_LAYERS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+ feat/backend-improvements
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
+ main
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,11 +89,24 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+ feat/backend-improvements
+ dj_database_url
+
+ dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgresql://postgres:EEqRGKABSXRdIB2t@db.hmmffckfbnrsiwrzujdg.supabase.co:5432/postgres',
+        conn_max_age=600,
+        # ssl_require=True,
+    )
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+ main
 }
 
 
