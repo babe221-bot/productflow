@@ -33,6 +33,15 @@ def proposal_list(request):
 
 from tasks.voting import submit_vote
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+
+ feat/backend-improvements
+
+from tasks.voting import submit_vote
+
+ main
 def cast_vote(request, proposal_id, vote_direction):
     if request.method == 'POST':
         proposal = Proposal.objects.get(id=proposal_id)
@@ -46,6 +55,18 @@ def cast_vote(request, proposal_id, vote_direction):
         signed_tx = "0x1234567890"
         submit_vote.delay(proposal_id, vote_direction, signed_tx)
 
+ feat/backend-improvements
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'proposals',
+            {
+                'type': 'proposal_update',
+                'proposal_id': proposal_id
+            }
+        )
+
+
+ main
         return render(request, 'components/_proposal_card.html', {'proposal': proposal})
 
     return redirect('proposal_list')
@@ -53,5 +74,8 @@ def cast_vote(request, proposal_id, vote_direction):
 def get_proposal_card(request, proposal_id):
     proposal = Proposal.objects.get(id=proposal_id)
     return render(request, 'components/_proposal_card.html', {'proposal': proposal})
+ feat/backend-improvements
 
+
+ main
  main

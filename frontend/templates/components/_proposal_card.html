@@ -1,7 +1,11 @@
  feat/backend-improvements
 <div class="border rounded-xl p-4 shadow dao-card" id="proposal-card-{{ proposal.id }}" hx-swap="outerHTML">
 
+ feat/backend-improvements
+<div class="border rounded-xl p-4 shadow dao-card" id="proposal-card-{{ proposal.id }}" hx-swap="outerHTML">
+
 <div class="border rounded-xl p-4 shadow dao-card">
+ main
  main
     <h3 class="text-xl font-bold">{{ proposal.title }}</h3>
     <div class="status-badge status-{{ proposal.status }}">
@@ -13,6 +17,10 @@
  feat/backend-improvements
                 hx-target="#proposal-card-{{ proposal.id }}"
 
+ feat/backend-improvements
+                hx-target="#proposal-card-{{ proposal.id }}"
+
+ main
  main
                 class="btn-vote-for">
             For ({{ proposal.votes_for }})
@@ -21,6 +29,10 @@
  feat/backend-improvements
                 hx-target="#proposal-card-{{ proposal.id }}"
 
+ feat/backend-improvements
+                hx-target="#proposal-card-{{ proposal.id }}"
+
+ main
  main
                 class="btn-vote-against">
             Against ({{ proposal.votes_against }})
