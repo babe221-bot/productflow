@@ -2,11 +2,12 @@ import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Box } from '@mui/material';
+
 import { useAuthStore } from './hooks/useAuth';
 import Login from './components/Login';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load components for code splitting
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -40,20 +41,22 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Layout>
-        <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/equipment" element={<Equipment />} />
-            <Route path="/equipment/:id" element={<EquipmentDetail />} />
-            <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </Suspense>
-      </Layout>
+      <ErrorBoundary>
+        <Layout>
+          <Suspense fallback={<LoadingSpinner message="Loading page..." />}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/equipment" element={<Equipment />} />
+              <Route path="/equipment/:id" element={<EquipmentDetail />} />
+              <Route path="/maintenance" element={<Maintenance />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Suspense>
+        </Layout>
+      </ErrorBoundary>
       {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
     </QueryClientProvider>
   );

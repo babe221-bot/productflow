@@ -121,8 +121,9 @@ export interface EquipmentCreateData {
   name: string;
   type: string;
   location: string;
-  capacity: number;
-  installation_date: string;
+  capacity?: number;
+  installation_date?: string;
+  status: string;
 }
 
 export interface SensorDataCreateData {

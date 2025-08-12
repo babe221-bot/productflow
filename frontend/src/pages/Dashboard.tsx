@@ -6,7 +6,7 @@ import {
   CardContent,
   Typography,
   Chip,
-  LinearProgress,
+
   Alert,
   Skeleton,
 } from '@mui/material';
@@ -19,9 +19,9 @@ import {
   AttachMoney,
 } from '@mui/icons-material';
 import { useDashboardSummary } from '../hooks/useProduction';
-import { DashboardSummary } from '../types';
+
 import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
-import { EQUIPMENT_STATUS } from '../constants';
+
 
 interface KPIItem {
   label: string;
