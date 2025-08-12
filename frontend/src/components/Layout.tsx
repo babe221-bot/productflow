@@ -64,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const { logout } = useAuthStore();
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     // Animate sidebar items on mount
