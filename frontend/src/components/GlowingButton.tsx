@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
-import anime from 'animejs';
+// @ts-ignore
+const anime = require('animejs');
 
 interface GlowingButtonProps extends ButtonProps {
   glowColor?: string;

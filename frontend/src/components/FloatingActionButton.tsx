@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Fab, FabProps } from '@mui/material';
-import anime from 'animejs';
+// @ts-ignore
+const anime = require('animejs');
 
 interface FloatingActionButtonProps extends FabProps {
   floatAnimation?: boolean;

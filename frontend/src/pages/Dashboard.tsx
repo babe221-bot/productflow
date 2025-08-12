@@ -15,7 +15,8 @@ import {
   Build,
   AttachMoney,
 } from '@mui/icons-material';
-import anime from 'animejs';
+// @ts-ignore
+const anime = require('animejs');
 import { useDashboardSummary } from '../hooks/useProduction';
 import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
 import { EQUIPMENT_STATUS } from '../constants';

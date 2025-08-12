@@ -29,7 +29,8 @@ import {
   Build,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import anime from 'animejs';
+// @ts-ignore
+const anime = require('animejs');
 import { useEquipment, useCreateEquipment } from '../hooks/useEquipment';
 import { Equipment as EquipmentType, EquipmentCreateData } from '../types';
 import { formatDateTime } from '../utils/format';
