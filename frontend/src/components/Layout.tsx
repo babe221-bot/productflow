@@ -1,20 +1,20 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
+  AppBar,
   Box,
   Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  Typography,
-  Divider,
   IconButton,
-  ListItem,
+  List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Toolbar,
+  Typography,
+  Avatar,
   Menu,
   MenuItem,
-
+  Badge,
+  Divider,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -26,24 +26,26 @@ import {
   AccountCircle,
   Logout,
   Factory,
+  Notifications,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import anime from 'animejs';
+import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
 
 interface MenuItem {
   text: string;
-  icon: ReactNode;
+  icon: React.ReactElement;
   path: string;
 }
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const menuItems: MenuItem[] = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
@@ -54,11 +56,39 @@ const menuItems: MenuItem[] = [
 ];
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { logout } = useAuthStore();
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Animate sidebar items on mount
+    if (sidebarRef.current) {
+      const listItems = sidebarRef.current.querySelectorAll('.menu-item');
+      anime({
+        targets: listItems,
+        translateX: [-30, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(100, { start: 300 }),
+        duration: 600,
+        easing: 'easeOutCubic',
+      });
+    }
+
+    // Animate logo
+    if (logoRef.current) {
+      anime({
+        targets: logoRef.current,
+        scale: [0.8, 1],
+        opacity: [0, 1],
+        duration: 800,
+        easing: 'easeOutBack',
+      });
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -72,43 +102,161 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     handleMenuClose();
+    navigate('/login');
+  };
+
+  const handleMenuItemClick = (path: string) => {
+    navigate(path);
+    setMobileOpen(false);
+    
+    // Add click animation to the selected item
+    const clickedItem = document.querySelector(`[data-path="${path}"]`);
+    if (clickedItem) {
+      anime({
+        targets: clickedItem,
+        scale: [1, 0.95, 1],
+        duration: 200,
+        easing: 'easeOutCubic',
+      });
+    }
   };
 
   const drawer = (
-    <div>
-      <Toolbar>
-        <Factory sx={{ mr: 2, color: 'primary.main' }} />
-        <Typography variant="h6" noWrap component="div">
-          ProducFlow
+    <Box ref={sidebarRef}>
+      <Box
+        sx={{
+          p: 3,
+          background: 'linear-gradient(135deg, rgba(100, 181, 246, 0.1), rgba(156, 39, 176, 0.1))',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        }}
+      >
+        <Box display="flex" alignItems="center">
+          <Factory 
+            ref={logoRef}
+            sx={{ 
+              mr: 2, 
+              fontSize: 32,
+              color: 'primary.main',
+              background: 'linear-gradient(45deg, #64b5f6, #ab47bc)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }} 
+          />
+          <Typography 
+            variant="h5" 
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(45deg, #64b5f6, #ab47bc)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            ProducFlow
+          </Typography>
+        </Box>
+        <Typography 
+          variant="caption" 
+          sx={{ 
+            color: 'text.secondary',
+            display: 'block',
+            mt: 0.5,
+            opacity: 0.7,
+          }}
+        >
+          Smart Manufacturing Platform
         </Typography>
-      </Toolbar>
-      <Divider />
-      <List>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              selected={location.pathname === item.path}
-              onClick={() => navigate(item.path)}
+      </Box>
+
+      <List sx={{ px: 2, py: 3 }}>
+        {menuItems.map((item, index) => (
+          <ListItemButton
+            key={item.text}
+            className="menu-item"
+            data-path={item.path}
+            selected={location.pathname === item.path}
+            onClick={() => handleMenuItemClick(item.path)}
+            sx={{
+              borderRadius: 3,
+              mb: 1,
+              position: 'relative',
+              overflow: 'hidden',
+              background: location.pathname === item.path 
+                ? 'linear-gradient(45deg, rgba(25, 118, 210, 0.2), rgba(156, 39, 176, 0.2))'
+                : 'transparent',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(45deg, rgba(100, 181, 246, 0.1), rgba(156, 39, 176, 0.1))',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+              },
+              '&:hover::before': {
+                opacity: 1,
+              },
+              '&:hover': {
+                transform: 'translateX(8px)',
+                boxShadow: '0 4px 20px rgba(100, 181, 246, 0.3)',
+              },
+              '&.Mui-selected': {
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: 4,
+                  height: '60%',
+                  background: 'linear-gradient(45deg, #64b5f6, #ab47bc)',
+                  borderRadius: '0 4px 4px 0',
+                },
+              },
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                color: location.pathname === item.path ? 'primary.main' : 'text.secondary',
+                minWidth: 40,
+                transition: 'color 0.3s ease',
+              }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={item.text}
+              sx={{
+                '& .MuiTypography-root': {
+                  fontWeight: location.pathname === item.path ? 600 : 400,
+                  color: location.pathname === item.path ? 'text.primary' : 'text.secondary',
+                  transition: 'all 0.3s ease',
+                },
+              }}
+            />
+          </ListItemButton>
         ))}
       </List>
-    </div>
+    </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          background: 'rgba(10, 25, 41, 0.8)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(100, 181, 246, 0.2)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3)',
         }}
       >
         <Toolbar>
@@ -117,56 +265,108 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ 
+              mr: 2, 
+              display: { md: 'none' },
+              '&:hover': {
+                background: 'rgba(100, 181, 246, 0.1)',
+                transform: 'scale(1.1)',
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Manufacturing Management System
+          
+          <Typography 
+            variant="h6" 
+            noWrap 
+            component="div" 
+            sx={{ 
+              flexGrow: 1,
+              display: { xs: 'none', sm: 'block' },
+              color: 'text.primary',
+              fontWeight: 600,
+            }}
+          >
+            Manufacturing Operations Center
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+
+          <Box display="flex" alignItems="center" gap={1}>
             <StatusIndicator />
-            <Typography variant="body2" sx={{ mx: 2 }}>
-              {user?.full_name}
-            </Typography>
             <NotificationCenter />
+            
             <IconButton
               size="large"
+              edge="end"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenuClick}
-              color="inherit"
+              sx={{
+                '&:hover': {
+                  background: 'rgba(100, 181, 246, 0.1)',
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.3s ease',
+              }}
             >
-              <AccountCircle />
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  background: 'linear-gradient(45deg, #64b5f6, #ab47bc)',
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                }}
+              >
+                <AccountCircle />
+              </Avatar>
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleLogout}>
-                <Logout sx={{ mr: 1 }} />
-                Logout
-              </MenuItem>
-            </Menu>
           </Box>
+
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                mt: 1,
+                background: 'rgba(10, 25, 41, 0.95)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(100, 181, 246, 0.2)',
+                borderRadius: 2,
+                minWidth: 180,
+              },
+            }}
+          >
+            <MenuItem 
+              onClick={handleLogout}
+              sx={{
+                '&:hover': {
+                  background: 'rgba(244, 67, 54, 0.1)',
+                },
+              }}
+            >
+              <Logout sx={{ mr: 1, color: 'error.main' }} />
+              <Typography sx={{ color: 'text.primary' }}>Logout</Typography>
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
+
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
       >
         <Drawer
           variant="temporary"
@@ -176,8 +376,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             keepMounted: true,
           }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              background: 'rgba(10, 25, 41, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRight: '1px solid rgba(100, 181, 246, 0.2)',
+            },
           }}
         >
           {drawer}
@@ -185,26 +391,33 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              background: 'rgba(10, 25, 41, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRight: '1px solid rgba(100, 181, 246, 0.2)',
+            },
           }}
           open
         >
           {drawer}
         </Drawer>
       </Box>
+
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          mt: 8,
+          position: 'relative',
         }}
       >
-        <Toolbar />
         {children}
+        <QuickActions />
       </Box>
-      <QuickActions />
     </Box>
   );
 };
