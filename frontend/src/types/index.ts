@@ -20,6 +20,12 @@ export interface Equipment {
   installation_date: string;
   created_at: string;
   updated_at: string | null;
+  latest_sensor_data?: {
+    temperature?: number;
+    pressure?: number;
+    speed?: number;
+    vibration?: number;
+  };
 }
 
 export interface SensorData {
