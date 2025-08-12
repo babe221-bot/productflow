@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import {
   Box,
   Drawer,
@@ -12,7 +12,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Avatar,
   Menu,
   MenuItem,
 } from '@mui/material';
@@ -33,9 +32,19 @@ import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
 
+interface MenuItem {
+  text: string;
+  icon: ReactNode;
+  path: string;
+}
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
 const drawerWidth = 240;
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
   { text: 'Equipment', icon: <Precision />, path: '/equipment' },
   { text: 'Maintenance', icon: <Build />, path: '/maintenance' },
@@ -43,9 +52,9 @@ const menuItems = [
   { text: 'Users', icon: <People />, path: '/users' },
 ];
 
-const Layout = ({ children }) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
@@ -54,7 +63,7 @@ const Layout = ({ children }) => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleMenuClick = (event) => {
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 

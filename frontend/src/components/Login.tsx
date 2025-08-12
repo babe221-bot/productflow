@@ -15,32 +15,38 @@ import {
 import { Factory, Login as LoginIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login = () => {
-  const [email, setEmail] = useState('admin@producflow.com');
-  const [password, setPassword] = useState('admin123');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+interface DemoCredential {
+  role: string;
+  email: string;
+  password: string;
+}
+
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>('admin@producflow.com');
+  const [password, setPassword] = useState<string>('admin123');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
 
-  const demoCredentials = [
+  const demoCredentials: DemoCredential[] = [
     { role: 'Admin', email: 'admin@producflow.com', password: 'admin123' },
     { role: 'Manager', email: 'manager@producflow.com', password: 'manager123' },
     { role: 'Technician', email: 'tech@producflow.com', password: 'tech123' },
   ];
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     const result = await login(email, password);
     if (!result.success) {
-      setError(result.error);
+      setError(result.error || 'Login failed');
     }
     setLoading(false);
   };
 
-  const handleDemoLogin = (demoEmail, demoPassword) => {
+  const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
   };
