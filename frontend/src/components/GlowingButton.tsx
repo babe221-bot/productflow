@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
-import * as anime from 'animejs';
+import anime from 'animejs';
 
 interface GlowingButtonProps extends ButtonProps {
   glowColor?: string;

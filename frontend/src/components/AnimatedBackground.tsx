@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
-import * as anime from 'animejs';
+import anime from 'animejs';
 
 interface Particle {
   x: number;

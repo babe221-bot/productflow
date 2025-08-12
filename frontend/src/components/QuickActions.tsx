@@ -14,7 +14,7 @@ import {
   Close,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import * as anime from 'animejs';
+import anime from 'animejs';
 import FloatingActionButton from './FloatingActionButton';
 
 interface QuickAction {

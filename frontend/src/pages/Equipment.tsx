@@ -29,7 +29,7 @@ import {
   Build,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import * as anime from 'animejs';
+import anime from 'animejs';
 import { useEquipment, useCreateEquipment } from '../hooks/useEquipment';
 import { Equipment as EquipmentType, EquipmentCreateData } from '../types';
 import { formatDateTime } from '../utils/format';
