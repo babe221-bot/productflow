@@ -1,30 +1,27 @@
 #!/usr/bin/env python3
 """
-Initialize the database with sample data for ProducFlow
+Initialize the database with tables and sample data (async)
 """
 
-from app.database import SessionLocal, engine
+import asyncio
+from app.database import engine, SessionLocal
 from app.models import Base
 from app.crud import init_sample_data
 
-def init_database():
-    """Initialize database with tables and sample data"""
+async def init_database():
     print("Creating database tables...")
-    Base.metadata.create_all(bind=engine)
-    
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
     print("Adding sample data...")
-    db = SessionLocal()
-    try:
-        init_sample_data(db)
-        print("Database initialized successfully!")
-        print("\nDemo credentials:")
-        print("Admin: admin@producflow.com / admin123")
-        print("Manager: manager@producflow.com / manager123")
-        print("Technician: tech@producflow.com / tech123")
-    except Exception as e:
-        print(f"Error initializing database: {e}")
-    finally:
-        db.close()
+    async with SessionLocal() as db:
+        await init_sample_data(db)
+
+    print("Database initialized successfully!\n")
+    print("Demo credentials:")
+    print("Admin:    admin@producflow.com / admin123")
+    print("Manager:  manager@producflow.com / manager123")
+    print("Technician: tech@producflow.com / tech123")
 
 if __name__ == "__main__":
-    init_database()
+    asyncio.run(init_database())

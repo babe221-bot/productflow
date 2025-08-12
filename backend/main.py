@@ -17,6 +17,13 @@ async def create_tables():
 
 from app.settings import settings
 
+# Basic structured logging
+import logging
+logging.basicConfig(
+    level=logging.DEBUG if getattr(settings, "debug", True) else logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s"
+)
+
 app = FastAPI(
     title="ProducFlow API",
     description="Manufacturing Management System API",
@@ -148,6 +155,11 @@ async def read_dashboard_summary(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     return await crud.get_dashboard_summary(db)
+
+# Healthcheck endpoint for uptime monitoring and container health
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 # Production records endpoints
 @app.get("/production/records", response_model=List[schemas.ProductionRecord])
