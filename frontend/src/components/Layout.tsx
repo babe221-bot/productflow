@@ -18,7 +18,7 @@ import {
 import {
   Menu as MenuIcon,
   Dashboard,
-  Precision,
+  Engineering,
   Build,
   Analytics,
   People,
@@ -46,7 +46,7 @@ const drawerWidth = 240;
 
 const menuItems: MenuItem[] = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
-  { text: 'Equipment', icon: <Precision />, path: '/equipment' },
+  { text: 'Equipment', icon: <Engineering />, path: '/equipment' },
   { text: 'Maintenance', icon: <Build />, path: '/maintenance' },
   { text: 'Analytics', icon: <Analytics />, path: '/analytics' },
   { text: 'Users', icon: <People />, path: '/users' },
