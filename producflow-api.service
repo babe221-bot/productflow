@@ -1,0 +1,29 @@
+[Unit]
+Description=ProducFlow API
+After=network.target
+Wants=network.target
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+RuntimeDirectory=producflow
+WorkingDirectory=/opt/producflow/backend
+Environment=PATH=/opt/producflow/backend/.venv/bin
+EnvironmentFile=/opt/producflow/backend/.env.production
+ExecStart=/opt/producflow/backend/.venv/bin/gunicorn main:app -c gunicorn.conf.py
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/producflow/backend /var/log/producflow /tmp
+
+[Install]
+WantedBy=multi-user.target

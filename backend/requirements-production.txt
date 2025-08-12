@@ -1,0 +1,18 @@
+# Production requirements
+-r requirements.txt
+
+# Production server
+gunicorn>=21.2.0
+
+# Database (uncomment if using PostgreSQL in production)
+# psycopg2-binary>=2.9.0
+
+# Monitoring and logging
+prometheus-client>=0.17.0
+sentry-sdk[fastapi]>=1.32.0
+
+# Security
+cryptography>=41.0.0
+
+# Performance
+redis>=4.6.0

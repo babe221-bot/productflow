@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: producflow-api
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./producflow.db
+      - SECRET_KEY=${SECRET_KEY}
+      - CORS_ORIGINS=["https://your-domain.com"]
+      - ENVIRONMENT=production
+    volumes:
+      - ./backend/producflow.db:/app/producflow.db
+      - ./logs:/var/log/producflow
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - producflow-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: producflow-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - producflow-network
+
+  # Optional: Add PostgreSQL for production
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: producflow-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: producflow
+  #     POSTGRES_USER: producflow_user
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - producflow-network
+
+  # Optional: Add Redis for caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: producflow-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - producflow-network
+
+networks:
+  producflow-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

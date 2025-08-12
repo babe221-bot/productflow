@@ -299,4 +299,71 @@ For deployment issues:
 4. Check network connectivity
 5. Review configuration files
 
+## 🐳 Docker Deployment (Alternative)
+
+### Quick Docker Deployment
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your production values
+nano .env
+
+# Build and start containers
+docker-compose -f docker-compose.prod.yml up -d
+
+# Check status
+docker-compose -f docker-compose.prod.yml ps
+```
+
+### Docker Commands
+```bash
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Restart services
+docker-compose -f docker-compose.prod.yml restart
+
+# Stop services
+docker-compose -f docker-compose.prod.yml down
+
+# Update and rebuild
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml build --no-cache
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+## 🚀 Automated Deployment
+
+### Using the Deployment Script
+```bash
+# Make script executable
+chmod +x deploy.sh
+
+# Run deployment
+./deploy.sh
+```
+
+The deployment script will:
+- Set up directory structure
+- Install dependencies
+- Build frontend
+- Configure services
+- Start everything
+
+## 📋 Pre-Deployment Checklist
+
+Before deploying to production:
+
+- [ ] Update domain name in nginx configuration
+- [ ] Generate strong SECRET_KEY
+- [ ] Configure CORS_ORIGINS with your domain
+- [ ] Set up SSL certificates
+- [ ] Configure database (PostgreSQL recommended)
+- [ ] Set up monitoring and logging
+- [ ] Configure backups
+- [ ] Test all endpoints
+- [ ] Set up firewall rules
+- [ ] Configure rate limiting
+
 **ProducFlow is ready for production deployment!** 🏭
