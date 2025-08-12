@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, CardProps } from '@mui/material';
-import anime from 'animejs';
+import * as anime from 'animejs';
 
 interface AnimatedCardProps extends CardProps {
   animationType?: 'fadeInUp' | 'scaleIn' | 'slideInLeft' | 'slideInRight';

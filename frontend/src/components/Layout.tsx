@@ -29,7 +29,7 @@ import {
   Notifications,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import anime from 'animejs';
+import * as anime from 'animejs';
 import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';

@@ -15,7 +15,7 @@ import {
   Build,
   AttachMoney,
 } from '@mui/icons-material';
-import anime from 'animejs';
+import * as anime from 'animejs';
 import { useDashboardSummary } from '../hooks/useProduction';
 import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
 import { EQUIPMENT_STATUS } from '../constants';
