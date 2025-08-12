@@ -31,7 +31,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
   const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<SVGSVGElement>(null);
-  const titleRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
