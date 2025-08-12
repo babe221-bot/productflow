@@ -15,6 +15,8 @@ async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+from app.settings import settings
+
 app = FastAPI(
     title="ProducFlow API",
     description="Manufacturing Management System API",
@@ -29,7 +31,7 @@ async def on_startup():
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
