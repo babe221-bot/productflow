@@ -15,13 +15,14 @@ import {
   Build,
   AttachMoney,
 } from '@mui/icons-material';
-// @ts-ignore
-const anime = require('animejs');
 import { useDashboardSummary } from '../hooks/useProduction';
 import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
 import { EQUIPMENT_STATUS } from '../constants';
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
+
+// @ts-ignore
+const anime = require('animejs');
 
 interface KPIItem {
   label: string;

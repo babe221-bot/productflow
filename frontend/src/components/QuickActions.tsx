@@ -14,9 +14,10 @@ import {
   Close,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import FloatingActionButton from './FloatingActionButton';
+
 // @ts-ignore
 const anime = require('animejs');
-import FloatingActionButton from './FloatingActionButton';
 
 interface QuickAction {
   icon: React.ReactNode;
