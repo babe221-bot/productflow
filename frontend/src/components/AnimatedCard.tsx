@@ -24,7 +24,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     const card = cardRef.current;
     
     // Set initial state
-    animate({
+    animateSafe({
       targets: card,
       opacity: 0,
       translateY: animationType.includes('Up') ? 30 : 0,
@@ -34,7 +34,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     });
 
     // Animate in
-    animate({
+    animateSafe({
       targets: card,
       opacity: 1,
       translateY: 0,
@@ -47,7 +47,8 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
     // Add hover animation
     const handleMouseEnter = () => {
-      animate({
+      console.log('Mouse enter event triggered');
+      animateSafe({
         targets: card,
         scale: 1.02,
         translateY: -4,
