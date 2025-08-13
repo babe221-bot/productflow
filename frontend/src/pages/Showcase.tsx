@@ -20,7 +20,7 @@ import {
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
 import FloatingActionButton from '../components/FloatingActionButton';
-import animate from 'animejs';
+import { animate } from 'animejs';
 
 const Showcase: React.FC = () => {
   const titleRef = useRef<HTMLElement>(null);

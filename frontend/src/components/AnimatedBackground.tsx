@@ -166,8 +166,8 @@ const AnimatedBackground: React.FC = () => {
       console.log('Cleaning up background animations');
       if (container) {
         const particleEls = container.querySelectorAll('.particle');
-        anime.remove(particleEls);
-        anime.remove(container.querySelectorAll('div'));
+        utils.remove(particleEls);
+        utils.remove(container.querySelectorAll('div'));
         container.innerHTML = '';
       }
       particlesRef.current = [];
