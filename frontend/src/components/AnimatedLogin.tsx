@@ -110,6 +110,14 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
     }
   }, []);
 
+  // Debug DOM elements for login container
+  useEffect(() => {
+    if (containerRef.current) {
+      console.log('Container element:', containerRef.current);
+      console.log('Number of child elements:', containerRef.current.childNodes.length);
+    }
+  }, []);
+
   const validationSchema = Yup.object({
     email: Yup.string()
       .email('Invalid email format')
@@ -129,7 +137,9 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
       const success = await onLogin(values.email, values.password);
       if (success) {
         // Animate success and navigate
-        animate({
+        const nodes = document.querySelectorAll('.login-form');
+        console.log('Starting login success animation, targets count:', nodes.length);
+        animateSafe({
           targets: '.login-form',
           scale: [1, 1.05, 0.95],
           opacity: [1, 0],
