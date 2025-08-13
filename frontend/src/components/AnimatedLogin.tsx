@@ -16,9 +16,7 @@ import * as Yup from 'yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GlowingButton from './GlowingButton';
 import AnimatedCard from './AnimatedCard';
-
-// @ts-ignore
-const anime = require('animejs');
+import anime from 'animejs';
 
 interface AnimatedLoginProps {
   onLogin: (email: string, password: string) => Promise<boolean>;

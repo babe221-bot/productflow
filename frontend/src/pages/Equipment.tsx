@@ -36,9 +36,7 @@ import { EQUIPMENT_STATUS } from '../constants';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
-
-// @ts-ignore
-const anime = require('animejs');
+import anime from 'animejs';
 
 const Equipment: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');

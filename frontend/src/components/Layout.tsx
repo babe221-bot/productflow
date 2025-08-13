@@ -33,9 +33,7 @@ import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
-
-// @ts-ignore
-const anime = require('animejs');
+import anime from 'animejs';
 
 interface MenuItem {
   text: string;

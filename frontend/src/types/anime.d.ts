@@ -50,5 +50,5 @@ declare module 'animejs' {
   }
 
   const anime: AnimeStatic;
-  export = anime;
+  export default anime;
 }

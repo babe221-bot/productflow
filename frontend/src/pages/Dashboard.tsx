@@ -20,9 +20,7 @@ import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
 import { EQUIPMENT_STATUS } from '../constants';
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
-
-// @ts-ignore
-const anime = require('animejs');
+import anime from 'animejs';
 
 interface KPIItem {
   label: string;
