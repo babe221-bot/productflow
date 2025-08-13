@@ -33,7 +33,7 @@ import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
-import anime from 'animejs';
+import { animate, stagger } from 'animejs';
 
 interface MenuItem {
   text: string;
@@ -115,7 +115,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     // Add click animation to the selected item
     const clickedItem = document.querySelector(`[data-path="${path}"]`);
     if (clickedItem) {
-      anime({
+      animate({
         targets: clickedItem,
         scale: [1, 0.95, 1],
         duration: 200,

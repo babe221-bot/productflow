@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 interface GlowingButtonProps extends ButtonProps {
   glowColor?: string;
@@ -21,7 +21,7 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({
 
     const button = buttonRef.current;
     
-    const pulseAnim = anime({
+    const pulseAnim = animate({
       targets: button,
       scale: [1, 1.05, 1],
       boxShadow: [

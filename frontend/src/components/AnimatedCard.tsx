@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, CardProps } from '@mui/material';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 interface AnimatedCardProps extends CardProps {
   animationType?: 'fadeInUp' | 'scaleIn' | 'slideInLeft' | 'slideInRight';
@@ -23,15 +23,17 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     const card = cardRef.current;
     
     // Set initial state
-    anime.set(card, {
+    animate({
+      targets: card,
       opacity: 0,
       translateY: animationType.includes('Up') ? 30 : 0,
       translateX: animationType.includes('Left') ? -30 : animationType.includes('Right') ? 30 : 0,
       scale: animationType === 'scaleIn' ? 0.8 : 1,
+      duration: 0,
     });
 
     // Animate in
-    anime({
+    animate({
       targets: card,
       opacity: 1,
       translateY: 0,
@@ -44,7 +46,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
     // Add hover animation
     const handleMouseEnter = () => {
-      anime({
+      animate({
         targets: card,
         scale: 1.02,
         translateY: -4,
@@ -54,7 +56,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     };
 
     const handleMouseLeave = () => {
-      anime({
+      animate({
         targets: card,
         scale: 1,
         translateY: 0,

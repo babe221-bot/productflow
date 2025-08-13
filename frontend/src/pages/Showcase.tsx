@@ -20,7 +20,7 @@ import {
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
 import FloatingActionButton from '../components/FloatingActionButton';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 const Showcase: React.FC = () => {
   const titleRef = useRef<HTMLElement>(null);
@@ -37,7 +37,7 @@ const Showcase: React.FC = () => {
   useEffect(() => {
     // Animate main title
     if (titleRef.current) {
-      anime({
+      animate({
         targets: titleRef.current,
         scale: [0.8, 1.2, 1],
         rotate: [0, 5, -5, 0],
@@ -66,7 +66,7 @@ const Showcase: React.FC = () => {
         
         container.appendChild(floatingElement);
         
-        anime({
+        animate({
           targets: floatingElement,
           translateY: [
             { value: Math.random() * 200 - 100, duration: 4000 + Math.random() * 2000 },

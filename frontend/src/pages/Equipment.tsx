@@ -36,7 +36,7 @@ import { EQUIPMENT_STATUS } from '../constants';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 const Equipment: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -65,7 +65,7 @@ const Equipment: React.FC = () => {
   useEffect(() => {
     // Animate page title
     if (titleRef.current) {
-      anime({
+      animate({
         targets: titleRef.current,
         translateY: [-30, 0],
         opacity: [0, 1],
@@ -77,7 +77,7 @@ const Equipment: React.FC = () => {
 
     // Animate search bar
     if (searchRef.current) {
-      anime({
+      animate({
         targets: searchRef.current,
         translateY: [20, 0],
         opacity: [0, 1],

@@ -16,7 +16,7 @@ import * as Yup from 'yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GlowingButton from './GlowingButton';
 import AnimatedCard from './AnimatedCard';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 interface AnimatedLoginProps {
   onLogin: (email: string, password: string) => Promise<boolean>;
@@ -36,7 +36,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
   useEffect(() => {
     // Animate logo on mount
     if (logoRef.current) {
-      anime({
+      animate({
         targets: logoRef.current,
         scale: [0, 1.2, 1],
         rotate: [0, 360],
@@ -48,7 +48,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
 
     // Animate title
     if (titleRef.current) {
-      anime({
+      animate({
         targets: titleRef.current,
         translateY: [-50, 0],
         opacity: [0, 1],
@@ -77,7 +77,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
         
         container.appendChild(particle);
         
-        anime({
+        animate({
           targets: particle,
           translateY: [
             { value: Math.random() * 100 - 50, duration: 3000 + Math.random() * 2000 },

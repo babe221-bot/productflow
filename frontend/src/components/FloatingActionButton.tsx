@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Fab, FabProps } from '@mui/material';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 interface FloatingActionButtonProps extends FabProps {
   floatAnimation?: boolean;
@@ -22,7 +22,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     const fab = fabRef.current;
     
     // Float animation
-    const floatAnim = anime({
+    const floatAnim = animate({
       targets: fab,
       translateY: [-8, 8],
       duration: 3000,
@@ -32,7 +32,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     });
 
     // Glow pulse
-    const glowAnim = anime({
+    const glowAnim = animate({
       targets: fab,
       boxShadow: [
         `0 8px 30px rgba(100, 181, 246, ${glowIntensity * 0.3})`,
