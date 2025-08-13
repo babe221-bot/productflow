@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
-import anime from 'animejs';
+import { animate } from 'animejs';
 
 interface Particle {
   x: number;
@@ -59,7 +59,7 @@ const AnimatedBackground: React.FC = () => {
     // Animate particles floating
     particlesRef.current.forEach((particle, index) => {
       if (particle.element) {
-        anime({
+        animate({
           targets: particle.element,
           translateY: [
             { value: Math.random() * 20 - 10, duration: 2000 + Math.random() * 2000 },
@@ -125,7 +125,7 @@ const AnimatedBackground: React.FC = () => {
       container.appendChild(shape);
 
       // Animate shapes
-      anime({
+      animate({
         targets: shape,
         rotate: shapeType === 'square' ? '405deg' : '360deg',
         translateY: [
