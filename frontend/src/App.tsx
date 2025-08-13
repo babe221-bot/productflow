@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { useAuthStore } from './hooks/useAuth';
+import { useAuth } from './contexts/AuthContext';
 import Login from './components/Login';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -29,13 +29,13 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const { user, isLoading, isAuthenticated } = useAuthStore();
+  const { user, loading } = useAuth();
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingSpinner message="Initializing ProducFlow..." fullScreen />;
   }
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Login />;
   }
 

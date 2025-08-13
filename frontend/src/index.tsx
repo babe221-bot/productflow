@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
 import { theme } from './styles/theme';
 import AnimatedBackground from './components/AnimatedBackground';
+import { AuthProvider } from './contexts/AuthContext';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element not found');
@@ -16,7 +17,9 @@ root.render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AnimatedBackground />
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
