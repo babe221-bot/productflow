@@ -69,17 +69,21 @@ const Showcase: React.FC = () => {
         animate({
           targets: floatingElement,
           translateY: [
-            { value: Math.random() * 200 - 100, duration: 4000 + Math.random() * 2000 },
-            { value: Math.random() * 200 - 100, duration: 4000 + Math.random() * 2000 },
+            Math.random() * 200 - 100,
+            Math.random() * 200 - 100,
+            Math.random() * 200 - 100,
           ],
           translateX: [
-            { value: Math.random() * 200 - 100, duration: 5000 + Math.random() * 2000 },
-            { value: Math.random() * 200 - 100, duration: 5000 + Math.random() * 2000 },
+            Math.random() * 200 - 100,
+            Math.random() * 200 - 100,
+            Math.random() * 200 - 100,
           ],
           rotate: [0, 360],
           opacity: [0.1, 0.3, 0.1],
           scale: [0.5, 1, 0.5],
+          duration: 8000 + Math.random() * 4000,
           loop: true,
+          direction: 'alternate',
           easing: 'easeInOutSine',
           delay: Math.random() * 3000,
         });
@@ -94,16 +98,18 @@ const Showcase: React.FC = () => {
     demoCardRefs.current.forEach((card, index) => {
       if (card) {
         // Reset card position
-        anime.set(card, {
+        animate({
+          targets: card,
           opacity: 0,
           translateY: currentAnimation.includes('Up') ? 30 : 0,
           translateX: currentAnimation.includes('Left') ? -30 : 
                      currentAnimation.includes('Right') ? 30 : 0,
           scale: currentAnimation === 'scaleIn' ? 0.8 : 1,
+          duration: 0,
         });
 
         // Animate in
-        anime({
+        animate({
           targets: card,
           opacity: 1,
           translateY: 0,

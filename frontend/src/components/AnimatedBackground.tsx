@@ -59,25 +59,32 @@ const AnimatedBackground: React.FC = () => {
     // Animate particles floating
     particlesRef.current.forEach((particle, index) => {
       if (particle.element) {
+        // Create continuous floating animation
         animate({
           targets: particle.element,
           translateY: [
-            { value: Math.random() * 20 - 10, duration: 2000 + Math.random() * 2000 },
-            { value: Math.random() * 20 - 10, duration: 2000 + Math.random() * 2000 },
+            Math.random() * 20 - 10,
+            Math.random() * 20 - 10,
+            Math.random() * 20 - 10,
           ],
           translateX: [
-            { value: Math.random() * 30 - 15, duration: 3000 + Math.random() * 2000 },
-            { value: Math.random() * 30 - 15, duration: 3000 + Math.random() * 2000 },
+            Math.random() * 30 - 15,
+            Math.random() * 30 - 15,
+            Math.random() * 30 - 15,
           ],
           opacity: [
-            { value: Math.random() * 0.3 + 0.2, duration: 1500 + Math.random() * 1500 },
-            { value: Math.random() * 0.6 + 0.3, duration: 1500 + Math.random() * 1500 },
+            Math.random() * 0.3 + 0.2,
+            Math.random() * 0.6 + 0.3,
+            Math.random() * 0.3 + 0.2,
           ],
           scale: [
-            { value: 0.8 + Math.random() * 0.4, duration: 2000 + Math.random() * 1000 },
-            { value: 0.8 + Math.random() * 0.4, duration: 2000 + Math.random() * 1000 },
+            0.8 + Math.random() * 0.4,
+            1.0 + Math.random() * 0.2,
+            0.8 + Math.random() * 0.4,
           ],
+          duration: 4000 + Math.random() * 2000,
           loop: true,
+          direction: 'alternate',
           easing: 'easeInOutSine',
           delay: Math.random() * 2000,
         });
@@ -129,15 +136,19 @@ const AnimatedBackground: React.FC = () => {
         targets: shape,
         rotate: shapeType === 'square' ? '405deg' : '360deg',
         translateY: [
-          { value: Math.random() * 100 - 50, duration: 8000 + Math.random() * 4000 },
-          { value: Math.random() * 100 - 50, duration: 8000 + Math.random() * 4000 },
+          Math.random() * 100 - 50,
+          Math.random() * 100 - 50,
+          Math.random() * 100 - 50,
         ],
         translateX: [
-          { value: Math.random() * 100 - 50, duration: 10000 + Math.random() * 5000 },
-          { value: Math.random() * 100 - 50, duration: 10000 + Math.random() * 5000 },
+          Math.random() * 100 - 50,
+          Math.random() * 100 - 50,
+          Math.random() * 100 - 50,
         ],
         opacity: [0.05, 0.2, 0.05],
+        duration: 12000 + Math.random() * 6000,
         loop: true,
+        direction: 'alternate',
         easing: 'easeInOutSine',
         delay: Math.random() * 5000,
       });

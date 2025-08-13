@@ -80,22 +80,28 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
         animate({
           targets: particle,
           translateY: [
-            { value: Math.random() * 100 - 50, duration: 3000 + Math.random() * 2000 },
-            { value: Math.random() * 100 - 50, duration: 3000 + Math.random() * 2000 },
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50,
           ],
           translateX: [
-            { value: Math.random() * 100 - 50, duration: 4000 + Math.random() * 2000 },
-            { value: Math.random() * 100 - 50, duration: 4000 + Math.random() * 2000 },
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50,
           ],
           opacity: [
-            { value: Math.random() * 0.5 + 0.2, duration: 2000 + Math.random() * 1000 },
-            { value: Math.random() * 0.8 + 0.3, duration: 2000 + Math.random() * 1000 },
+            Math.random() * 0.5 + 0.2,
+            Math.random() * 0.8 + 0.3,
+            Math.random() * 0.5 + 0.2,
           ],
           scale: [
-            { value: 0.5 + Math.random() * 0.5, duration: 2500 + Math.random() * 1500 },
-            { value: 0.5 + Math.random() * 0.5, duration: 2500 + Math.random() * 1500 },
+            0.5 + Math.random() * 0.5,
+            1.0 + Math.random() * 0.2,
+            0.5 + Math.random() * 0.5,
           ],
+          duration: 5000 + Math.random() * 3000,
           loop: true,
+          direction: 'alternate',
           easing: 'easeInOutSine',
           delay: Math.random() * 3000,
         });
