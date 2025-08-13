@@ -60,8 +60,11 @@ const AnimatedBackground: React.FC = () => {
     // Animate particles floating
     particlesRef.current.forEach((particle, index) => {
       if (particle.element) {
+        if (index === 0) {
+          console.log('Particles created:', particlesRef.current.length);
+        }
         // Create continuous floating animation
-        animate({
+        animateSafe({
           targets: particle.element,
           translateY: [
             Math.random() * 20 - 10,
@@ -88,6 +91,8 @@ const AnimatedBackground: React.FC = () => {
           direction: 'alternate',
           easing: 'easeInOutSine',
           delay: Math.random() * 2000,
+          begin: () => console.log(`Particle ${index} animation started`),
+          complete: () => console.log(`Particle ${index} animation completed`),
         });
       }
     });
@@ -131,9 +136,10 @@ const AnimatedBackground: React.FC = () => {
       }
 
       container.appendChild(shape);
+      console.log('Shapes created (so far):', container.querySelectorAll('div').length - particlesRef.current.length);
 
       // Animate shapes
-      animate({
+      animateSafe({
         targets: shape,
         rotate: shapeType === 'square' ? '405deg' : '360deg',
         translateY: [
@@ -157,7 +163,11 @@ const AnimatedBackground: React.FC = () => {
 
     // Cleanup function
     return () => {
+      console.log('Cleaning up background animations');
       if (container) {
+        const particleEls = container.querySelectorAll('.particle');
+        anime.remove(particleEls);
+        anime.remove(container.querySelectorAll('div'));
         container.innerHTML = '';
       }
       particlesRef.current = [];
