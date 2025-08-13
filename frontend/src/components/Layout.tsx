@@ -33,7 +33,7 @@ import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
-import animate from 'animejs';
+import { animate, stagger } from 'animejs';
 
 interface MenuItem {
   text: string;
@@ -72,7 +72,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         targets: listItems,
         translateX: [-30, 0],
         opacity: [0, 1],
-        delay: animate.stagger(100, { start: 300 }),
+        delay: stagger(100, { start: 300 }),
         duration: 600,
         easing: 'easeOutCubic',
       });

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
-import anime from 'animejs';
+import { utils } from 'animejs';
 import animateSafe from '../utils/animateSafe';
 
 interface Particle {
