@@ -17,6 +17,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import GlowingButton from './GlowingButton';
 import AnimatedCard from './AnimatedCard';
 import animate from 'animejs';
+import animateSafe from '../utils/animateSafe';
 
 interface AnimatedLoginProps {
   onLogin: (email: string, password: string) => Promise<boolean>;
@@ -36,7 +37,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
   useEffect(() => {
     // Animate logo on mount
     if (logoRef.current) {
-      animate({
+      animateSafe({
         targets: logoRef.current,
         scale: [0, 1.2, 1],
         rotate: [0, 360],
@@ -48,7 +49,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
 
     // Animate title
     if (titleRef.current) {
-      animate({
+      animateSafe({
         targets: titleRef.current,
         translateY: [-50, 0],
         opacity: [0, 1],
@@ -77,7 +78,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
         
         container.appendChild(particle);
         
-        animate({
+        animateSafe({
           targets: particle,
           translateY: [
             Math.random() * 100 - 50,

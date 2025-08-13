@@ -58,7 +58,8 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
     };
 
     const handleMouseLeave = () => {
-      animate({
+      console.log('Mouse leave event triggered');
+      animateSafe({
         targets: card,
         scale: 1,
         translateY: 0,
