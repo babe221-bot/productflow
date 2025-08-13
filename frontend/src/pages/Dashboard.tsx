@@ -20,7 +20,7 @@ import { formatCurrency, formatPercent, formatDateTime } from '../utils/format';
 import { EQUIPMENT_STATUS } from '../constants';
 import AnimatedCard from '../components/AnimatedCard';
 import GlowingButton from '../components/GlowingButton';
-import { animate } from 'animejs';
+import animate from 'animejs';
 
 interface KPIItem {
   label: string;

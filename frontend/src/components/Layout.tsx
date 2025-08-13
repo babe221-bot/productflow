@@ -33,7 +33,7 @@ import { useAuthStore } from '../hooks/useAuth';
 import NotificationCenter from './NotificationCenter';
 import StatusIndicator from './StatusIndicator';
 import QuickActions from './QuickActions';
-import { animate, stagger } from 'animejs';
+import animate from 'animejs';
 
 interface MenuItem {
   text: string;
@@ -68,11 +68,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     // Animate sidebar items on mount
     if (sidebarRef.current) {
       const listItems = sidebarRef.current.querySelectorAll('.menu-item');
-      anime({
+      animate({
         targets: listItems,
         translateX: [-30, 0],
         opacity: [0, 1],
-        delay: anime.stagger(100, { start: 300 }),
+        delay: animate.stagger(100, { start: 300 }),
         duration: 600,
         easing: 'easeOutCubic',
       });
@@ -80,7 +80,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     // Animate logo
     if (logoRef.current) {
-      anime({
+      animate({
         targets: logoRef.current,
         scale: [0.8, 1],
         opacity: [0, 1],

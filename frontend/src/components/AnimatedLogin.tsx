@@ -16,7 +16,7 @@ import * as Yup from 'yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GlowingButton from './GlowingButton';
 import AnimatedCard from './AnimatedCard';
-import { animate } from 'animejs';
+import animate from 'animejs';
 
 interface AnimatedLoginProps {
   onLogin: (email: string, password: string) => Promise<boolean>;
@@ -122,7 +122,7 @@ const AnimatedLogin: React.FC<AnimatedLoginProps> = ({ onLogin, loading, error }
       const success = await onLogin(values.email, values.password);
       if (success) {
         // Animate success and navigate
-        anime({
+        animate({
           targets: '.login-form',
           scale: [1, 1.05, 0.95],
           opacity: [1, 0],

@@ -15,7 +15,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import FloatingActionButton from './FloatingActionButton';
-import { animate, stagger } from 'animejs';
+import animate from 'animejs';
 
 interface QuickAction {
   icon: React.ReactNode;
@@ -41,7 +41,7 @@ const QuickActions: React.FC = () => {
         scale: [0, 1],
         rotate: [180, 0],
         opacity: [0, 1],
-        delay: stagger(100),
+        delay: animate.stagger(100),
         duration: 400,
         easing: 'easeOutBack',
       });
