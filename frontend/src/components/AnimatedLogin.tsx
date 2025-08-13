@@ -16,7 +16,6 @@ import * as Yup from 'yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GlowingButton from './GlowingButton';
 import AnimatedCard from './AnimatedCard';
-import animate from 'animejs';
 import animateSafe from '../utils/animateSafe';
 
 interface AnimatedLoginProps {
