@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // Animate title
     if (titleRef.current) {
-      anime({
+      animate({
         targets: titleRef.current,
         translateY: [-30, 0],
         opacity: [0, 1],
