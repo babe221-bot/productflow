@@ -2,17 +2,17 @@
 -r requirements.txt
 
 # Production server
-gunicorn>=21.2.0
+gunicorn>=23.0.0
 
 # Database (uncomment if using PostgreSQL in production)
-# psycopg2-binary>=2.9.0
+# psycopg2-binary>=2.9.9
 
 # Monitoring and logging
-prometheus-client>=0.17.0
-sentry-sdk[fastapi]>=1.32.0
+prometheus-client>=0.21.0
+sentry-sdk[fastapi]>=2.24.0
 
 # Security
-cryptography>=41.0.0
+cryptography>=45.0.6
 
 # Performance
-redis>=4.6.0
+redis>=5.2.0
