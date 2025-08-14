@@ -22,14 +22,15 @@ import {
   Add,
   Refresh,
 } from '@mui/icons-material';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthStore } from '../hooks/useAuth';
+import { User } from '../types';
 
 const Users = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useAuthStore();
 
   useEffect(() => {
     // Mock user data - in real implementation, this would come from an API
@@ -85,7 +86,7 @@ const Users = () => {
     }, 1000);
   }, [roleFilter]);
 
-  const getRoleColor = (role) => {
+  const getRoleColor = (role: string) => {
     switch (role) {
       case 'admin':
         return 'error';
@@ -100,7 +101,7 @@ const Users = () => {
     }
   };
 
-  const getRoleIcon = (role) => {
+  const getRoleIcon = (role: string) => {
     switch (role) {
       case 'admin':
         return <AdminPanelSettings />;

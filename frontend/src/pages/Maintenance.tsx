@@ -23,11 +23,12 @@ import {
   Refresh,
   Add,
 } from '@mui/icons-material';
-import axios from 'axios';
+import { maintenanceAPI } from '../services/api';
+import { MaintenanceAlert, MaintenanceLog } from '../types';
 
 const Maintenance = () => {
-  const [alerts, setAlerts] = useState([]);
-  const [logs, setLogs] = useState([]);
+  const [alerts, setAlerts] = useState<MaintenanceAlert[]>([]);
+  const [logs, setLogs] = useState<MaintenanceLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
@@ -42,8 +43,8 @@ const Maintenance = () => {
       setLoading(true);
       const alertParams = priorityFilter ? { priority: priorityFilter } : {};
       const [alertsResponse, logsResponse] = await Promise.all([
-        axios.get('/maintenance', { params: alertParams }),
-        axios.get('/maintenance/logs')
+        maintenanceAPI.getMaintenanceAlerts(alertParams),
+        maintenanceAPI.getMaintenanceLogs()
       ]);
       setAlerts(alertsResponse.data);
       setLogs(logsResponse.data);
@@ -56,7 +57,7 @@ const Maintenance = () => {
     }
   };
 
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical':
         return 'error';
@@ -71,7 +72,7 @@ const Maintenance = () => {
     }
   };
 
-  const getPriorityIcon = (priority) => {
+  const getPriorityIcon = (priority: string) => {
     switch (priority) {
       case 'critical':
         return <Error />;
@@ -86,7 +87,7 @@ const Maintenance = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
         return 'success';

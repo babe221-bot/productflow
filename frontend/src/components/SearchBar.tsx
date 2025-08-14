@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import {
   TextField,
   InputAdornment,
@@ -15,6 +15,22 @@ import {
   FilterList,
 } from '@mui/icons-material';
 
+interface FilterOption {
+  value: string;
+  label: string;
+}
+
+interface SearchBarProps {
+  placeholder?: string;
+  onSearch?: (value: string) => void;
+  onFilterChange?: (filters: string[]) => void;
+  filters?: FilterOption[];
+  suggestions?: string[];
+  value?: string;
+  fullWidth?: boolean;
+  showFilters?: boolean;
+}
+
 const SearchBar = ({
   placeholder = 'Search...',
   onSearch,
@@ -24,16 +40,16 @@ const SearchBar = ({
   value = '',
   fullWidth = false,
   showFilters = true,
-}) => {
+}: SearchBarProps) => {
   const [searchValue, setSearchValue] = useState(value);
-  const [activeFilters, setActiveFilters] = useState([]);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     setSearchValue(value);
   }, [value]);
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setSearchValue(newValue);
     
@@ -47,7 +63,7 @@ const SearchBar = ({
     return () => clearTimeout(timeoutId);
   };
 
-  const handleSearchSubmit = (event) => {
+  const handleSearchSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (onSearch) {
       onSearch(searchValue);
@@ -61,7 +77,7 @@ const SearchBar = ({
     }
   };
 
-  const handleFilterToggle = (filter) => {
+  const handleFilterToggle = (filter: string) => {
     const newFilters = activeFilters.includes(filter)
       ? activeFilters.filter(f => f !== filter)
       : [...activeFilters, filter];
@@ -72,7 +88,7 @@ const SearchBar = ({
     }
   };
 
-  const handleSuggestionSelect = (event, value) => {
+  const handleSuggestionSelect = (event: React.SyntheticEvent, value: string | null) => {
     if (value) {
       setSearchValue(value);
       if (onSearch) {
