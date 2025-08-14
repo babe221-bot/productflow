@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,10 +6,12 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 import uvicorn
 import asyncio
+import os
 
 from app.database import engine
-from app import models, schemas, crud, auth
+from app import models, schemas, crud, auth, monitoring
 from app.models import Base
+from app.monitoring import PrometheusMiddleware, init_sentry, get_metrics
 
 async def create_tables():
     async with engine.begin() as conn:
@@ -34,6 +36,16 @@ app = FastAPI(
 async def on_startup():
     await create_tables()
 
+
+# Initialize Sentry if DSN is provided
+if os.getenv("SENTRY_DSN"):
+    init_sentry(
+        dsn=os.getenv("SENTRY_DSN"),
+        environment=os.getenv("ENVIRONMENT", "development")
+    )
+
+# Add Prometheus middleware
+app.add_middleware(PrometheusMiddleware)
 
 # CORS middleware
 app.add_middleware(
@@ -160,6 +172,14 @@ async def read_dashboard_summary(
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+# Metrics endpoint for Prometheus
+@app.get("/metrics")
+async def metrics():
+    return Response(
+        content=get_metrics(),
+        media_type="text/plain"
+    )
 
 # Production records endpoints
 @app.get("/production/records", response_model=List[schemas.ProductionRecord])
