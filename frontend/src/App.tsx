@@ -2,12 +2,14 @@ import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import * as Sentry from '@sentry/react';
 
 import { useAuth } from './contexts/AuthContext';
 import Login from './components/Login';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorBoundary from './components/ErrorBoundary';
+import { captureException } from './sentry';
 
 // Lazy load components for code splitting
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -24,11 +26,15 @@ const queryClient = new QueryClient({
       retry: 2,
       staleTime: 30000, // 30 seconds
       refetchOnWindowFocus: false,
+      onError: (error) => {
+        captureException(error as Error, { location: 'query' });
+      },
     },
   },
 });
 
-function App() {
+// Error boundary component for Sentry
+const SentryErrorBoundary = Sentry.withErrorBoundary(function App() {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -60,6 +66,39 @@ function App() {
       {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
+}, {
+  fallback: (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      height: '100vh',
+      padding: '20px',
+      textAlign: 'center'
+    }}>
+      <h1>Something went wrong</h1>
+      <p>We're sorry, but something unexpected happened. Our team has been notified.</p>
+      <button 
+        onClick={() => window.location.reload()} 
+        style={{
+          marginTop: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Refresh Page
+      </button>
+    </div>
+  )
+});
+
+function App() {
+  return <SentryErrorBoundary />;
 }
 
 export default App;
