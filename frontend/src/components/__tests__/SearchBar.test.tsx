@@ -50,9 +50,9 @@ describe('SearchBar Component', () => {
     // Wait for suggestions to appear
     await waitFor(() => {
       expect(screen.getByText('Machine 1')).toBeInTheDocument();
-      expect(screen.getByText('Machine 2')).toBeInTheDocument();
-      expect(screen.getByText('Machine 3')).toBeInTheDocument();
     });
+    expect(screen.getByText('Machine 2')).toBeInTheDocument();
+    expect(screen.getByText('Machine 3')).toBeInTheDocument();
   });
 
   test('calls onSearch when suggestion is selected', async () => {
@@ -63,9 +63,11 @@ describe('SearchBar Component', () => {
     
     // Wait for suggestions to appear
     await waitFor(() => {
-      const suggestion = screen.getByText('Machine 1');
-      fireEvent.click(suggestion);
+      expect(screen.getByText('Machine 1')).toBeInTheDocument();
     });
+    
+    const suggestion = screen.getByText('Machine 1');
+    fireEvent.click(suggestion);
     
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith('Machine 1');
