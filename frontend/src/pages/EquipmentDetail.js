@@ -31,7 +31,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import axios from 'axios';
+import { equipmentAPI } from '../services/api';
+import { Equipment, SensorData } from '../types';
 
 ChartJS.register(
   CategoryScale,
@@ -44,10 +45,10 @@ ChartJS.register(
 );
 
 const EquipmentDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [equipment, setEquipment] = useState(null);
-  const [sensorData, setSensorData] = useState([]);
+  const [equipment, setEquipment] = useState<Equipment | null>(null);
+  const [sensorData, setSensorData] = useState<SensorData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -58,7 +59,7 @@ const EquipmentDetail = () => {
 
   const fetchEquipmentDetail = async () => {
     try {
-      const response = await axios.get(`/equipment/${id}`);
+      const response = await equipmentAPI.getEquipmentById(Number(id));
       setEquipment(response.data);
     } catch (error) {
       console.error('Failed to fetch equipment:', error);
@@ -68,7 +69,7 @@ const EquipmentDetail = () => {
 
   const fetchSensorData = async () => {
     try {
-      const response = await axios.get(`/equipment/${id}/sensors`);
+      const response = await equipmentAPI.getSensorData(Number(id));
       setSensorData(response.data);
     } catch (error) {
       console.error('Failed to fetch sensor data:', error);
@@ -78,7 +79,7 @@ const EquipmentDetail = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'operational':
         return 'success';
@@ -93,7 +94,7 @@ const EquipmentDetail = () => {
     }
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'operational':
         return <CheckCircle />;
@@ -108,20 +109,20 @@ const EquipmentDetail = () => {
     }
   };
 
-  const getHealthScoreColor = (score) => {
+  const getHealthScoreColor = (score: number) => {
     if (score >= 80) return 'success';
     if (score >= 60) return 'warning';
     return 'error';
   };
 
-  const prepareSensorChartData = (sensorType) => {
+  const prepareSensorChartData = (sensorType: string) => {
     const filteredData = sensorData
       .filter(data => data.sensor_type === sensorType)
-      .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
       .slice(-20); // Last 20 readings
 
     return {
-      labels: filteredData.map(data => 
+      labels: filteredData.map(data =>
         new Date(data.timestamp).toLocaleTimeString()
       ),
       datasets: [
